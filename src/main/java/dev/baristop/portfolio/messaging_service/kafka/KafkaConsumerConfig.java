@@ -74,10 +74,7 @@ public class KafkaConsumerConfig {
                 String dltTopic = record.topic() + ".DLT";
                 int partition = record.partition();
                 // log full exception
-                // log.error("Will publish to DLT topic '{}' partition {} because: {}", dltTopic, partition, ex.toString(), ex);
-
-                // log partial exception
-                log.error("Will publish to DLT topic '{}' partition {} because: {}", dltTopic, partition, ex.toString());
+                log.error("Will publish to DLT topic '{}' partition {} because: {}", dltTopic, partition, ex.toString(), ex);
 
                 return new TopicPartition(dltTopic, partition);
             }
