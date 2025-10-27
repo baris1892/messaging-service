@@ -1,5 +1,7 @@
 # Messaging Service
 
+> ⚠️ **Portfolio / Demo** — This repository is part of a personal portfolio
+
 ![GitHub Actions](https://github.com/baris-top-portfolio/messaging-service/workflows/Messaging%20Service%20CI/CD/badge.svg)
 
 Spring Boot microservice that **consumes Kafka events** (e.g., `ListingStatusChangedEvent`) and sends email
