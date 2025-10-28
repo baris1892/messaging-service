@@ -103,31 +103,35 @@ jobs:
     env:
       IMAGE_REPO: baris1892/private
       IMAGE_TAG_FULL: messaging-service-${{ needs.build.outputs.version }}
-
+  
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Log in to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
+  
       - name: Download JAR artifact
         uses: actions/download-artifact@v4
         with:
           name: messaging-service-jar
           path: target/
-
-      - name: Build & Tag Docker Image
-        run: |
-          echo "Building image ${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG_FULL }}"
-          docker build -t ${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG_FULL }} .
-
-      - name: Push Docker Image
-        run: |
-          docker push ${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG_FULL }}
+  
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+  
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+  
+      - name: Build & Push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG_FULL }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   ##########################
   # Deploy Job (Dummy for local k3s)
