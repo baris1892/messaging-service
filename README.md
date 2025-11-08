@@ -37,7 +37,7 @@ For more details, check `.github/workflows/ci-cd.yaml`.
 
 ## 📥 Installation & Local Setup
 
-For installation, see the separate INSTALL.md. It includes:
+For installation, see the separate [INSTALL.md](./INSTALL.md). It includes:
 
 - Environment variable setup (.env.dist)
 - Starting required dependencies (Kafka, Mailpit)
