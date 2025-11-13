@@ -1,8 +1,10 @@
 package dev.baristop.portfolio.messaging_service.kafka;
 
-import dev.baristop.portfolio.messaging_service.email.EmailNotificationService;
 import dev.baristop.portfolio.messaging_service.kafka.dto.ListingStatus;
 import dev.baristop.portfolio.messaging_service.kafka.dto.ListingStatusChangedEvent;
+import dev.baristop.portfolio.messaging_service.notification.NotificationFactory;
+import dev.baristop.portfolio.messaging_service.notification.NotificationService;
+import dev.baristop.portfolio.messaging_service.notification.NotificationType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,24 +12,29 @@ import static org.mockito.Mockito.*;
 
 class ListingStatusChangedConsumerTest {
 
-    private EmailNotificationService emailNotificationService;
+    private NotificationService notificationService;
     private ListingStatusChangedConsumer consumer;
 
     @BeforeEach
     void setUp() {
-        emailNotificationService = mock(EmailNotificationService.class);
-        consumer = new ListingStatusChangedConsumer(emailNotificationService);
+        notificationService = mock(NotificationService.class);
+        NotificationFactory notificationFactory = mock(NotificationFactory.class);
+
+        when(notificationFactory.getNotificationService(any(NotificationType.class)))
+            .thenReturn(notificationService);
+
+        consumer = new ListingStatusChangedConsumer(notificationFactory);
     }
 
     @Test
-    void shouldCallEmailNotificationServiceOnConsume() {
+    void shouldCallNotificationServiceOnConsume() {
         ListingStatusChangedEvent event = new ListingStatusChangedEvent(
             ListingStatus.APPROVED, "user@example.com", 1L, "Test Listing", "desc"
         );
 
         consumer.consume(event);
 
-        verify(emailNotificationService).handleListingStatusChange(event);
+        verify(notificationService, times(2)).notifyListingStatusChanged(event);
     }
 
     @Test
@@ -39,11 +46,11 @@ class ListingStatusChangedConsumerTest {
         try {
             consumer.consume(event);
         } catch (Exception e) {
-            // expected
+            // expected exception
         }
 
         // EmailNotificationService should not be called
-        verifyNoInteractions(emailNotificationService);
+        verifyNoInteractions(notificationService);
     }
 
     @Test

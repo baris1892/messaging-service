@@ -1,6 +1,7 @@
-package dev.baristop.portfolio.messaging_service.email;
+package dev.baristop.portfolio.messaging_service.notification.email;
 
 import dev.baristop.portfolio.messaging_service.kafka.dto.ListingStatusChangedEvent;
+import dev.baristop.portfolio.messaging_service.notification.NotificationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -8,16 +9,17 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class EmailNotificationService {
+public class EmailNotificationService implements NotificationService {
 
     private final EmailService emailService;
 
-    public void handleListingStatusChange(ListingStatusChangedEvent event) {
+    @Override
+    public void notifyListingStatusChanged(ListingStatusChangedEvent event) {
         String subject = buildSubject(event);
         String body = buildBody(event);
 
-        emailService.sendPlainTextEmail(event.getRecipientEmail(), subject, body);
-        log.info("Email sent to {} with subject '{}'", event.getRecipientEmail(), subject);
+        emailService.sendPlainTextEmail(event.getRecipient(), subject, body);
+        log.info("Email sent to {} with subject '{}'", event.getRecipient(), subject);
     }
 
     private String buildSubject(ListingStatusChangedEvent event) {

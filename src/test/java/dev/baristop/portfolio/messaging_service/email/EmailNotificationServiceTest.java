@@ -2,6 +2,8 @@ package dev.baristop.portfolio.messaging_service.email;
 
 import dev.baristop.portfolio.messaging_service.kafka.dto.ListingStatus;
 import dev.baristop.portfolio.messaging_service.kafka.dto.ListingStatusChangedEvent;
+import dev.baristop.portfolio.messaging_service.notification.email.EmailNotificationService;
+import dev.baristop.portfolio.messaging_service.notification.email.EmailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -29,7 +31,7 @@ class EmailNotificationServiceTest {
     void shouldSendApprovedEmail() {
         ListingStatusChangedEvent event = createEvent(ListingStatus.APPROVED, "Test Listing", 1L);
 
-        emailNotificationService.handleListingStatusChange(event);
+        emailNotificationService.notifyListingStatusChanged(event);
 
         var captured = captureSentEmail();
 
@@ -43,7 +45,7 @@ class EmailNotificationServiceTest {
     void shouldSendRejectedEmail() {
         ListingStatusChangedEvent event = createEvent(ListingStatus.REJECTED, "My Listing", 2L);
 
-        emailNotificationService.handleListingStatusChange(event);
+        emailNotificationService.notifyListingStatusChanged(event);
 
         var captured = captureSentEmail();
 
@@ -57,7 +59,7 @@ class EmailNotificationServiceTest {
     void shouldSendGenericEmailForOtherStatus() {
         ListingStatusChangedEvent event = createEvent(ListingStatus.PENDING, "Another Listing", 3L);
 
-        emailNotificationService.handleListingStatusChange(event);
+        emailNotificationService.notifyListingStatusChanged(event);
 
         var captured = captureSentEmail();
 

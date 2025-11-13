@@ -1,4 +1,4 @@
-package dev.baristop.portfolio.messaging_service.email;
+package dev.baristop.portfolio.messaging_service.notification.email;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

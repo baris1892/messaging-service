@@ -1,5 +1,6 @@
 package dev.baristop.portfolio.messaging_service.email;
 
+import dev.baristop.portfolio.messaging_service.notification.email.EmailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
